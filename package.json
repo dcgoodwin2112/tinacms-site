@@ -1,6 +1,6 @@
 {
-  "name": "grundgesetz-skeleton",
-  "description": "Zero-configuration documentation builder, powered by Gatsby.",
+  "name": "TinaCMS-site",
+  "description": "A site editor for next gen tools.",
   "version": "1.0.0",
   "private": true,
   "author": "Resi Respati <resi@kata.ai>",
