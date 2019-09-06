@@ -42,6 +42,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
     }
   }
+  //adding field here, the package didn't seem to
   if(node.internal.type.includes('Json')) {
 
     let pathRoot = process.cwd()
@@ -51,14 +52,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       node,
       value: parent.absolutePath.replace(pathRoot, ''),
     })
-  //   // console.log(getNode(node.parent))
-  //   const { relativePath } = getNode(node.parent)
-  //   console.log(relativePath)
-  //   createNodeField({
-  //     node,
-  //     name: 'fileRelativePath',
-  //     value: relativePath
-  //   })
    }
 };
 

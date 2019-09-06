@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'gatsby';
 import { createRemarkButton } from '@tinacms/react-tinacms-remark';
 import { withPlugin } from '@tinacms/react-tinacms'
+import { useJsonForm } from "@tinacms/react-tinacms-json"
 
 import { MenuNode, Edge, HeaderMenuItem } from 'interfaces/nodes';
 import { determineFontDimensions, Heading } from 'components/foundations';
@@ -167,6 +168,9 @@ interface NavigationProps {
 
 function Navigation({ title, navigation, headerMenus }: NavigationProps) {
   const { state, dispatch } = React.useContext(NavigationContext);
+  //TRYING TO USE JSON FORM HERE---------------------------------------------
+  const [jsonData] = useJsonForm(navigation)
+  console.log(jsonData)
   return (
     <Wrapper isOpen={state.isOpen}>
       <Header>
@@ -203,7 +207,6 @@ function Navigation({ title, navigation, headerMenus }: NavigationProps) {
                   </a>
                 );
               }
-
               return (
                 <Link key={node.id} getProps={isActive} to={node.href}>
                   {node.label}
