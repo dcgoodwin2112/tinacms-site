@@ -7,7 +7,6 @@ next: /gatsby/content-creation
 
 There are many different content types in a Gatsby site. Currently Tina has plugins to edit [markdown](/gatsby/content-editing#editing-markdown-in-gatsby) & [JSON](/gatsby/content-editing#editing-json-in-gatsby), with plans for many more content types in the works. Have an idea for a Tina content editing plugin? [Consider contributing](/contributing/guidelines)! Check out how to create your own [form](/react/creating-forms) or [field plugin](/react/creating-fields).
 
-
 ##1. Editing Markdown in Gatsby
 
 The [`gatsby-transformer-remark`](https://github.com/gatsbyjs/gatsby/tree/master/packages/gatsby-transformer-remark) plugin lets us use markdown in our Gatsby sites. Two additional plugins let us edit markdown with Tina:
@@ -54,14 +53,14 @@ The `remarkForm` [higher-order component](https://reactjs.org/docs/higher-order-
 **Example: src/templates/blog-post.js**
 
 ```jsx
-import { remarkForm } from '@tinacms/react-tinacms-remark'
+import { remarkForm } from '@tinacms/react-tinacms-remark';
 
 function BlogPostTemplate(props) {
-  return <h1>{props.data.markdownRemark.frontmatter.title}</h1>
+  return <h1>{props.data.markdownRemark.frontmatter.title}</h1>;
 }
 
 // Wrap the export with `remarkForm`
-export default remarkForm(BlogPostTemplate)
+export default remarkForm(BlogPostTemplate);
 
 // Include the required fields in the query
 export const pageQuery = graphql`
@@ -81,7 +80,7 @@ export const pageQuery = graphql`
       }
     }
   }
-`
+`;
 ```
 
 _IMPORTANT:_ Any front matter fields that are **not** queried will be deleted when saving content via the CMS.
@@ -109,7 +108,7 @@ The `remarkForm` function accepts an optional `config` object for overriding the
 #### Example: src/templates/blog-post.js
 
 ```jsx
-import { remarkForm } from '@tinacms/react-tinacms-remark'
+import { remarkForm } from '@tinacms/react-tinacms-remark';
 
 function BlogPostTemplate(props) {
   return (
@@ -117,7 +116,7 @@ function BlogPostTemplate(props) {
       <h1>{props.markdownRemark.frontmatter.title}</h1>
       <p>{props.markdownRemark.frontmatter.description}</p>
     </>
-  )
+  );
 }
 
 let BlogPostForm = {
@@ -125,17 +124,53 @@ let BlogPostForm = {
     {
       label: 'Title',
       name: 'frontmatter.title',
-      component: 'text',
+      component: 'text'
     },
     {
       label: 'Description',
       name: 'frontmatter.description',
-      component: 'textarea',
-    },
-  ],
-}
+      component: 'textarea'
+    }
+  ]
+};
 
-export default remarkForm(BlogPostTemplate, BlogPostForm)
+export default remarkForm(BlogPostTemplate, BlogPostForm);
+```
+
+### Editing Transformed Frontmatter
+
+Gatsby makes it possible to transform a file's frontmatter using query parameters and plugins. Unfortunately, TinaCMS needs access to the raw frontmatter from your file. Without it, Tina will write out the processed frontmatter, which will probably break your site.
+
+To get around this issue, `gatsby-tinacms-git` adds the unprocessed frontmatter to `fields.rawFrontmatter`. Include this object in your query whenever your frontmatter is being modified by plugins or queries.
+
+**Example: src/templates/blog-post.js**
+
+```jsx
+export const pageQuery = graphql`
+  query BlogPostBySlug($slug: String!) {
+    markdownRemark(fields: { slug: { eq: $slug } }) {
+      id
+      fields {
+        fileRelativePath
+        // The raw frontmatter
+        rawFrontmatter {
+          title
+          date
+          description
+        }
+      }
+      rawMarkdownBody
+
+      html
+      frontmatter {
+        title
+        // Formatting date string
+        date(formatString: "dd MM, YYYY")
+        description
+      }
+    }
+  }
+`;
 ```
 
 ### Editing Markdown Content
@@ -194,12 +229,12 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/src/data`,
-        name: 'data',
-      },
+        name: 'data'
+      }
     },
-    'gatsby-transformer-json',
-  ],
-}
+    'gatsby-transformer-json'
+  ]
+};
 ```
 
 This will create a node for each json file in the `src/data` directory. You can then query that data like so:
@@ -266,12 +301,12 @@ useJsonForm(data): [values, form]
 **src/templates/blog-post.js**
 
 ```jsx
-import { useJsonForm } from '@tinacms/react-tinacms-json'
+import { useJsonForm } from '@tinacms/react-tinacms-json';
 
 function DataTemplate(props) {
-  const [data] = useJsonForm(props.data.dataJson)
+  const [data] = useJsonForm(props.data.dataJson);
 
-  return <h1>{data.firstName}</h1>
+  return <h1>{data.firstName}</h1>;
 }
 ```
 
@@ -293,7 +328,7 @@ only available within Function Components you will wneed to use `JsonForm` if yo
 **src/templates/blog-post.js**
 
 ```jsx
-import { JsonForm } from '@tinacms/react-tinacms-json'
+import { JsonForm } from '@tinacms/react-tinacms-json';
 
 class DataTemplate extends React.Component {
   render() {
@@ -301,10 +336,10 @@ class DataTemplate extends React.Component {
       <JsonForm
         data={this.props.data.dataJson}
         render={({ data }) => {
-          return <h1>{data.firstName}</h1>
+          return <h1>{data.firstName}</h1>;
         }}
       />
-    )
+    );
   }
 }
 ```
